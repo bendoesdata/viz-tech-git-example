@@ -10,18 +10,24 @@
 
 <body onresize="updateChartSize()">
     <div class="flex-container">
-        
-        
-        
+
+
+
         <div class="left">
             <h3>Responsive chart demonstration!</h3>
             <p>Change the window size and see the chart update!</p>
             <p>Here's more text</p>
+            <p>Change the window size and see the chart update!</p>
+            <p>Here's more text</p>
+            <p>Change the window size and see the chart update!</p>
+            <p>Here's more text</p>
+            <p>Change the window size and see the chart update!</p>
+            <p>Here's more text</p>
         </div>
-        
-        
-        
-        
+
+
+
+
         <div class="right">
             <div id="chart"></div>
         </div>
@@ -74,8 +80,8 @@
         .data(data)
         .enter()
         .append("circle")
-        .style("fill", "orange")
-        .attr("r", 5)
+        .style("fill", "purple")
+        .attr("r", 3)
         .on('mouseover', function (e, d) {
             d3.select(this)
                 .style("fill", "red");
