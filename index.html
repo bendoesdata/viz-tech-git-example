@@ -11,8 +11,9 @@
 <body onresize="updateChartSize()">
     <div class="flex-container">
         <div class="left">
-            <h3>Responsive chart</h3>
+            <h3>Responsive chart demo</h3>
             <p>Change the window size and see the chart update!</p>
+            <p>Here's more text</p>
         </div>
         <div class="right">
             <div id="chart"></div>
@@ -22,7 +23,7 @@
 </body>
 
 <script>
-    const numNodes = 100;
+    const numNodes = 200;
     const data = d3.range(numNodes).map(function (d, i) {
         return {
             x: Math.random() * 25,
