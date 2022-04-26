@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./style.css">
+    <title>D3 responsive example</title>
+</head>
+
+<body onresize="updateChartSize()">
+    <div class="flex-container">
+        <div class="left">
+            <h3>Responsive chart</h3>
+            <p>Change the window size and see the chart update!</p>
+        </div>
+        <div class="right">
+            <div id="chart"></div>
+        </div>
+    </div>
+
+</body>
+
+<script>
+    const numNodes = 100;
+    const data = d3.range(numNodes).map(function (d, i) {
+        return {
+            x: Math.random() * 25,
+            y: Math.random() * 25,
+        }
+    })
+
+    // global variables to edit later
+    let width, height;
+
+    // margin should not change, so make it a const
+    const margin = {
+        top: 20,
+        bottom: 20,
+        left: 30,
+        right: 20
+    }
+
+    // append the SVG, but don't assign any attr yet!
+    const svg = d3.select("#chart").append("svg");
+
+    // append a tooltip for later
+    const tooltip = d3.select("#chart")
+        .append("div")
+        .attr("class", "tooltip");
+
+    // create xScale and only set domain for now, no range yet
+    // the domain depends on our data which we should have pre-defined in this case
+    let xScale = d3.scaleLinear().domain([0, 25]);
+    let yScale = d3.scaleLinear().domain([0, 25]).nice(5);
+
+    // create the axis, but only append it!
+    const xAxis = svg.append("g");
+    const yAxis = svg.append("g");
+
+    // set the translation for one of the axes (why can we do this here?)
+    yAxis.attr("transform", "translate(" + margin.left + ", 0)");
+
+    // create the dots and add all the attr that DO NOT depend on width or height
+    const myDots = svg.selectAll("circles")
+        .data(data)
+        .enter()
+        .append("circle")
+        .style("fill", "orange")
+        .attr("r", 5)
+        .on('mouseover', function (e, d) {
+            d3.select(this)
+                .style("fill", "red");
+            tooltip.style("visibility", "visible");
+        })
+        .on('mousemove', function (e, d) {
+            tooltip
+                .style("top", `${e.clientY - 10}px`)
+                .style("left", `${e.clientX + 20}px`)
+                .html(`<strong>x:</strong><span>${d.x}</span>`)
+        })
+        .on('mouseout', function (d) {
+            d3.select(this)
+                .style("fill", "orange");
+
+            tooltip.style("visibility", "hidden")
+        });
+
+    // everything in this function depends on either our width or height variable updating
+    // it will fire anytime the browser window is resized
+    function updateChartSize() {
+        // get the width of the parent element of #chart div
+        // in this case, it's a flex item...so it changes dynamically via CSS!
+        width = document.getElementById("chart").parentElement.offsetWidth;
+
+        // breakpoint method of resizing
+        if (window.innerWidth > 1200) {
+            height = 600;
+        } else if ((window.innerWidth <= 1200) && (window.innerWidth > 800)) {
+            height = 400
+        } else {
+            height = 250;
+        }
+
+        // aspect ratio method of resizing
+        // height = width * 0.7;
+
+        // update/set the svg height and width using new values
+        svg.attr("width", width).attr("height", height);
+
+        // update the translation for the xaxis (since it uses height!)
+        xAxis.attr("transform", "translate(0, " + (height - margin.bottom) + ")");
+
+        // redefine the pixel range for x and y scale
+        xScale.range([margin.left, width - margin.right]);
+        yScale.range([height - margin.bottom, margin.top]);
+
+        // call the axes
+        xAxis.call(d3.axisBottom(xScale))
+        yAxis.call(d3.axisLeft(yScale))
+
+        // re-position the dots using our updated scales
+        myDots
+            .attr("cy", function (d) {
+                return yScale(d.y)
+            })
+            .attr("cx", function (d) {
+                return xScale(d.x)
+            })
+    }
+
+    // init the chart the first time
+    updateChartSize();
+
+</script>
+
+</html>

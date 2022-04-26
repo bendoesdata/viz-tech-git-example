@@ -1,0 +1,37 @@
+.flex-container {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+}
+
+.left {
+    flex: 0 1 250px;
+    background-color: aliceblue;
+    padding: 10px;
+}
+
+.right {
+    flex: 1 1 300px;
+    min-width: 0;
+    min-height: 0;
+}
+
+.tooltip {
+    position: absolute;
+    visibility: hidden;
+    top: 0px;
+    left: 0px;
+    padding: 2px;
+    background-color: rgba(255, 255, 255, 0.8);
+    font-size: 11pt;
+}
+
+.tick text {
+    font-size: 12px
+}
+
+@media screen and (max-width: 800px) {
+    .flex-container {
+        display: block;
+    }
+}
